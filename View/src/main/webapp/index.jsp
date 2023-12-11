@@ -1,3 +1,4 @@
+
 <%@page import="java.util.ArrayList"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="ISO-8859-1"%>
@@ -20,49 +21,81 @@
 </head>
 <body>
 	<%
-		session.setAttribute("novoPedido", "true");
-		String novoPedido = session.getAttribute("novoPedido").toString();
+		// API Request HTTP
+		URL url = new URL("http://localhost:8081/api/bebidas");
+		HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+		connection.setRequestMethod("GET");
 
-		List<Bebida> pedido = new ArrayList<Bebida>();
+		BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+		String line;
+		StringBuilder result = new StringBuilder();
 
-		if (novoPedido == "true") {
-			pedido.clear();
+		while ((line = reader.readLine()) != null) {
+			result.append(line);
 		}
+
+		reader.close();
+		connection.disconnect();
+
+		Gson gson = new Gson();
+		List<Bebida> listaDeBebidas = gson.fromJson(result.toString(), new TypeToken<List<Bebida>>() {
+		}.getType());
+		
+	%>
+	<%
+		List<Bebida> pedido = (List<Bebida>) session.getAttribute("pedido");
+	
+	    if (pedido == null) {
+	        pedido = new ArrayList<>();
+	        session.setAttribute("pedido", pedido);
+	    }
+	    
+	    String clear = request.getParameter("clear");
+	    
+	    if(clear != null && clear.equals("yes"))
+	    	pedido.clear();
+	
+	    // Verifica se o parâmetro "add" está presente na URL
+	    String addBebidaId = request.getParameter("add");
+	    if (addBebidaId != null && !addBebidaId.isEmpty()) {
+	        int bebidaId = Integer.parseInt(addBebidaId);
+	
+	        // Encontre a bebida correspondente ao ID
+	        Bebida bebidaSelecionada = null;
+	        for (Bebida bebida : listaDeBebidas) {
+	            if (bebida.getId() == bebidaId) {
+	                bebidaSelecionada = bebida;
+	                break;
+	            }
+	        }
+	
+	        // Adiciona a bebida selecionada ao array 'pedido'
+	        pedido.add(bebidaSelecionada);
+	        
+	
+	        // Redireciona de volta para a página principal (ou qualquer outra página)
+	        response.sendRedirect("index.jsp");
+	    }
 	%>
 	<header>
 		<div class="logo">
 			<img src="logo.png" alt="DRINK'S">
 		</div>
 		<a href="pedido.jsp"
-			onclick=<%request.setAttribute("accomList", pedido);
-			session.setAttribute("novoPedido", "false");%>
+			onclick="<%request.setAttribute("accomList", pedido);
+			session.setAttribute("novoPedido", "false");%>"
 			class="order-button">FINALIZAR PEDIDO</a>
 	</header>
 	<main>
+	<%if (addBebidaId != null && !addBebidaId.isEmpty()) {
+		System.out.println(addBebidaId);
+	%>
+		<div class="message"><p>
+		Item adicionado ao seu pedido.
+		</p></div>
+	<%}%>
 	<div class="menu">
 		<%
-			// Fazer a requisição HTTP para a sua API Spring
-			URL url = new URL("http://localhost:8081/api/bebidas");
-			HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-			connection.setRequestMethod("GET");
-
-			// Ler a resposta da API
-			BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
-			String line;
-			StringBuilder result = new StringBuilder();
-
-			while ((line = reader.readLine()) != null) {
-				result.append(line);
-			}
-
-			reader.close();
-			connection.disconnect();
-
-			// Converter a resposta JSON para uma lista de objetos usando o Gson
-			Gson gson = new Gson();
-			List<Bebida> listaDeBebidas = gson.fromJson(result.toString(), new TypeToken<List<Bebida>>() {
-			}.getType());
-
 			// Iterar sobre as bebidas e gerar o HTML dinamicamente
 			for (Bebida bebida : listaDeBebidas) {
 		%>
@@ -76,8 +109,8 @@
 				<p>
 					R$
 					<%=bebida.getCost()%></p>
-				<button class="add-button" onclick=<%pedido.add(bebida); System.out.println(pedido);%>>Adicionar
-					ao pedido</button>
+				<a class="add-button" href="index.jsp?add=<%=bebida.getId()%>">Adicionar ao pedido</a>
+
 			</div>
 		</div>
 		<%

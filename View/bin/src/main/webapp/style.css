@@ -1,25 +1,6 @@
-* {
+body {
     margin: 0;
-    padding: 0;
-    box-sizing: border-box;
     font-family: Arial, sans-serif;
-    text-decoration: none;
-}
-
-.message {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    height: 50px;
-    width: 100vw;
-    background: lightgoldenrodyellow;
-    border: 5px solid gold;
-    z-index: 10;
-}
-
-.message p {
-    font-weight: bold;
 }
 
 header {
@@ -54,28 +35,22 @@ header {
 main {
     background-color: #f2f2f2;
     padding: 20px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    height: calc(100vh - 175px);
 }
 
 .menu {
-    background-color: rgb(58, 58, 58);
-    border: 4px rgb(58, 58, 58) solid;
-    border-radius: 15px;
-    padding: 25px 100px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
+    position: absolute;
+    top: 50%;
+    left: 50%;
     height: 100%;
     width: 100%;
-    margin-top: 10px;
-    max-height: 700px;
+    margin-top: 110px;
+    transform: translate(-50%, -50%);
+    max-height: 700px; /* Altura máxima da div do menu, ajuste conforme necessário */
     max-width: 600px;
-    overflow-y: scroll;
-    overflow-x: hidden;
-    position: relative;
+    overflow-y: auto; /* Adicionado para permitir rolagem vertical quando necessário */
+    border: 4px rgb(58, 58, 58) solid;
+    background-color: rgb(58, 58, 58);
+    border-radius: 15px;
 }
 
 
@@ -83,7 +58,7 @@ main {
     background-color: rgb(255, 174, 0);
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     width: 100%;
-    width: 500px;
+    max-width: 500px;
     margin: 20px;
     padding: 20px;
     text-align: center;

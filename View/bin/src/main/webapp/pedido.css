@@ -3,23 +3,6 @@
   padding: 0;
   box-sizing: border-box;
   font-family: Arial, sans-serif;
-  text-decoration: none;
-}
-
-.message {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  height: 50px;
-  width: 100vw;
-  background: lightgoldenrodyellow;
-  border: 5px solid gold;
-  z-index: 10;
-}
-
-.message p {
-  font-weight: bold;
 }
 
 header {
@@ -29,6 +12,8 @@ header {
   justify-content: space-between;
   align-items: center;
   padding: 10px;
+  position: sticky;
+  top: 0;
   height: 175px;
 }
 
@@ -65,7 +50,10 @@ main {
   padding: 25px 100px;
   display: flex;
   flex-direction: column;
-  max-height: calc(100vh - 200px);
+  height: 100%;
+  width: 100%;
+  margin-top: 10px;
+  max-height: 700px;
   max-width: 600px;
   overflow-y: scroll;
   overflow-x: hidden;
@@ -117,11 +105,7 @@ main {
   font-size: 15px;
 }
 
-.pedido-info form input.enabled {
-  border-bottom: 2px solid #000;
-}
-
-.pedido-info form .submit {
+.pedido-info form button {
   background-color: #000;
   color: #fff;
   border: none;
@@ -130,7 +114,6 @@ main {
   border-radius: 5px;
   cursor: pointer;
   margin-top: 30px;
-  text-align: center;
 }
 
 .pedido-info form .cancelar-button {
@@ -141,6 +124,7 @@ main {
   font-size: 16px;
   border-radius: 5px;
   cursor: pointer;
+  text-decoration: none;
   text-align: center;
   margin-top: 15px;
 }
